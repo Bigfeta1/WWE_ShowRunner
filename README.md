@@ -144,11 +144,28 @@ Once both browser and service-level autoplay are enabled, ShowRunner will run se
 
 ---
 
-##Disable
-If you would like to disable the plugin, simply open up tamper monkey extension, and click the toggle next to the WWE ShowRunner script name and hit refresh
+## Disable
 
-##Uninstall
-To uninstall, open up TamperMonkey extension while the ShowRunner is active, click the dropdoown icon next to WWE Shorunner, and you can unistall this wal
+To temporarily disable the plugin:
+
+1. Open the **Tampermonkey** extension in your browser.
+2. Locate the script titled **WWE ShowRunner**.
+3. Click the **toggle switch** next to its name to disable it.
+4. Refresh your browser tab to apply the change.
+
+---
+
+## Uninstall
+
+To completely remove the plugin:
+
+1. Open the **Tampermonkey** extension while the ShowRunner is active.
+2. Find **WWE ShowRunner** in your list of scripts.
+3. Click the **dropdown arrow** next to its name.
+4. Select **Delete** or **Uninstall** from the menu.
+5. Confirm when prompted.
+
+---
 
 ## Notes
 
