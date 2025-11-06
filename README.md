@@ -9,10 +9,8 @@ Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in th
 
 - Automatic chronological playback across shows and platforms  
 - Hands-free episode switching after true video completion  
-- Respects manual pause (does not skip when you pause)  
 - Start from the beginning or resume from your last episode  
-- Import and export episode lists as JSON files  
-- Detects and ignores teaser or background animations on Peacock  
+- Import and export episode lists as JSON files   
 - Color-coded indicator dot showing current show type  
 - Lightweight "always-on" design (no manual activation needed)  
 
