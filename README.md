@@ -97,7 +97,7 @@ For example:
 ### If videos load but do not automatically start
 
 You must enable **autoplay** in both your **browser preferences** and **account settings** for Netflix and Peacock.  
-If autoplay is blocked at either level, ShowRunner cannot automatically continue playback.
+If autoplay is blocked at either level, ShowRunner cannot automatically continue playback as the video will load and be stopped.
 
 #### 1. Enable Autoplay in Browser Settings
 
