@@ -19,33 +19,39 @@ Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in th
 ---
 ## Installation
 
-Requirements
+**Requirements**
 - Active Netflix Subscription (US)
 - Active PeacockTV Subscription (US)
 
-1. Install and enable **Tampermonkey** in your browser  
-   - [Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
-   - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
-2. Download WWE ShowRunner-1.0.user.js and drag to desktop
-- Alternatively, you can copy the code from github directly
-3. Open TamperMonkey in your extensions and click **Create a new script**
-4. In the new screen, you have two options
-  a.  Drag the WWE ShowRunner-1.0.0.user.js file into tampermonkey from desktop
-  - You will get a prompt to install the script
-  - Accept Install and then close out of Tampermonkey
-  b. Copy the code into TamperMonkey- Right click WWE ShowRunner-1.0.user.js in desktop, open in notepad
-  - Copy the entire code, paste in Tampermonkey, then click **File → Save**
-  - Exit Tampermonkey
+1. Install and enable **Tampermonkey** in your browser.
+   - [Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+   - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 
-Once Installed, if you go to Netflix, and you will see a circle at the bottom right of your screen that you can click. 
-If the circle is not there, the installation was unsuccessful. After confirming the installation, the extension can then be loaded with the show order:
+2. Download `WWE ShowRunner-1.0.user.js` and drag it to your desktop.
+   - Alternatively, you can copy the code directly from GitHub.
 
-1. Download WWE_show_lists.json
-2. On Netflix or Peacock, click the circle at the bottom right
-3. On that menu, click import
-4. Select WWE_show_lists.json
+3. Open Tampermonkey in your extensions and click **Create a new script**.
 
-To confirm that the episodes were loaded, you should see the lists in the extension populate 
+4. In the new screen, choose one of the following methods:
+
+   **a. Drag-and-drop method**
+   - Drag `WWE ShowRunner-1.0.user.js` from your desktop into Tampermonkey.
+   - When prompted to install, click **Install** and then close Tampermonkey.
+
+   **b. Copy-and-paste method**
+   - Right-click `WWE ShowRunner-1.0.user.js` on your desktop and open it in Notepad.
+   - Copy the entire code, paste it into Tampermonkey, then click **File → Save**.
+   - Exit Tampermonkey.
+
+Once installed, go to Netflix or Peacock. You should see a circle at the bottom right of your screen that you can click.
+If the circle is not visible, the installation was unsuccessful. After confirming the installation, load the show order:
+
+1. Download `WWE_show_lists.json`.
+2. On Netflix or Peacock, click the circle at the bottom right.
+3. Click **Import** on the menu.
+4. Select `WWE_show_lists.json`.
+
+To confirm that the episodes were loaded, you should see the lists populate in the extension.
 
 ---
 
