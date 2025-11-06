@@ -27,16 +27,15 @@ Requirements
    - [Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
    - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
 2. Download WWE ShowRunner-1.0.user.js and drag to desktop
-   - Alternatively, you can copy the code from github directly
-4. Open TamperMonkey in your extensions and click **Create a new script**
-5. In the new screen, you have two options
-   a.  Drag the WWE ShowRunner-1.0.0.user.js file into tampermonkey from desktop
-      - You will get a prompt to install the script
-      - Accept Install and then close out of Tampermonkey      
-   b. Copy the code into TamperMonkey
-      - Right click WWE ShowRunner-1.0.user.js in desktop, open in notepad
-      - Copy the entire code, paste in Tampermonkey, then click **File → Save**
-      - Exit Tampermonkey
+- Alternatively, you can copy the code from github directly
+3. Open TamperMonkey in your extensions and click **Create a new script**
+4. In the new screen, you have two options
+  a.  Drag the WWE ShowRunner-1.0.0.user.js file into tampermonkey from desktop
+  - You will get a prompt to install the script
+  - Accept Install and then close out of Tampermonkey
+  b. Copy the code into TamperMonkey- Right click WWE ShowRunner-1.0.user.js in desktop, open in notepad
+  - Copy the entire code, paste in Tampermonkey, then click **File → Save**
+  - Exit Tampermonkey
 
 Once Installed, if you go to Netflix, and you will see a circle at the bottom right of your screen that you can click. 
 If the circle is not there, the installation was unsuccessful. After confirming the installation, the extension can then be loaded with the show order:
