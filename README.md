@@ -41,7 +41,7 @@ Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in th
    - Copy the entire code, paste it into Tampermonkey, then click **File → Save**.
    - Exit Tampermonkey.
 
-Once installed, reload and then hit "ctrl + alt + /". You should see The panel open up at the bottom right of the screen.
+Once installed, reload your browser and then hit "ctrl + alt + /". You should see The panel open up at the bottom right of the screen.
 If this does not appeare, the installation was unsuccessful. After confirming the installation, load the show order:
 
 1. Download `WWE_show_lists.json`.
