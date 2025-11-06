@@ -55,7 +55,7 @@ To confirm that the episodes were loaded, you should see the lists populate in t
 
 ## Usage
 
-1. press "ctrl + alt + /" to open the control pane (alternatively, you can click the colored circle at bottom right during an episode)
+1. Press "ctrl + alt + /" to open the control pane (alternatively, you can click the colored circle at bottom right during an episode)
 3. Add or import your lists of shows (RAW, SD, PPV, HEAT).  
 4. Click **Save** to update your list.  
 5. Use **Start** to begin from the first chronological episode (Wrestlemania 15 for now), or **Resume** to continue from your last watched episode.  
