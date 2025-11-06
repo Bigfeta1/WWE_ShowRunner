@@ -20,28 +20,35 @@ This userscript automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat*
 
 ## Installation
 
-### Option 1: Direct Installation (Recommended)
-
-1. Install **Tampermonkey** in your browser  
+1. Install and enable **Tampermonkey** in your browser  
    - [Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
    - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
-2. Open the **Raw** link to this script in your repository:  
-   ```
-   https://github.com/<your-username>/showrunner/raw/main/showrunner.user.js
-   ```
-3. Tampermonkey will prompt you to **install the script**. Confirm.
+2. Download WWE ShowRunner-1.0.user.js and drag to desktop
+3. Open TamperMonkey in your extensions and click **Create a new script**
+4. In the new screen, you have two options
+   a. Drag the WWE ShowRunner-1.0.0.user.js file into tampermonkey from desktop
+      - You will get a prompt to install the script
+      - Accept Install and then close out of Tampermonkey      
+   b. Copy the code into TamperMonkey
+      - Right click WWE ShowRunner-1.0.user.js in desktop, open in notepad
+      - Copy the entire code, paste in Tampermonkey, then click **File → Save**
+      - Exit Tampermonkey
 
----
+Once Installed, if you go to Netflix, and you will see a circle at the bottom right of your screen that you can click. 
+If the circle is not there, the installation was unsuccessful. After confirming the installation, the extension can then be loaded with the show order:
 
-### Option 2: Manual Installation
+1. Download WWE_show_lists.json
+2. On Netflix or Peacock, click the circle at the bottom right
+3. On that menu, click import
+4. Select WWE_show_lists.json
 
-1. Copy the full contents of `showrunner.user.js`.  
-2. In Tampermonkey, click **Create a new script**.  
-3. Paste the entire code, then click **File → Save**.  
+To confirm that the episodes were loaded, you should see the lists in the extension populate 
 
 ---
 
 ## Usage
+
+
 
 1. Navigate to any WWE episode on **Peacock** or **Netflix**.  
 2. Click the **colored circle** in the bottom-right corner of the page to open the control panel.  
