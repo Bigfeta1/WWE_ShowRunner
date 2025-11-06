@@ -1,17 +1,23 @@
 // ==UserScript==
 // @name         WWE ShowRunner
 // @namespace    wwe-alt-cross-provider
-// @version      1.0
-// @description  Chronological cross-show autoplay for RAW, SmackDown, PPV, Heat on Netflix and Peacock. Includes list editor, Start, Resume, Export, Import. Guards against teaser/background animations by confirming main playback and requiring current page to match a listed item before advancing.
-// @match        https://www.peacocktv.com/*
-// @match        https://www.netflix.com/*
+// @version      1.6
+// @description  Chronological cross show autoplay for RAW, SmackDown, PPV, Heat on Netflix and Peacock. Runs on all sites so hotkey and panel are always available. The dot only shows on target sites. Startup made fast.
+// @match        *://*/*
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @run-at       document-idle
+// @grant        GM_registerMenuCommand
+// @run-at       document-start
 // ==/UserScript==
 
 (function () {
   "use strict";
+
+  // hotkey Ctrl+Alt+/
+  const HOTKEY_CODE = "Slash";
+  const HOTKEY_CTRL = true;
+  const HOTKEY_ALT  = true;
+  const HOTKEY_SHIFT = false;
 
   // storage
   const GM_KEY = "wweAlt.state";
@@ -41,20 +47,13 @@
 
   function saveState() { writeGM(STATE); }
 
-  // state
   const STATE = loadState();
-  let USER_PAUSED = false;
-  let AP_TIMER = null;
-  let PAUSE_GUARD_UNTIL = 0;
-  let ADVANCING = false;
-  let END_WATCH = null;
 
-  // teaser guards
-  const MIN_CONSIDERED_DURATION = 100;
-  const MIN_ELAPSED_TO_CONFIRM = 30;
-  let MAIN_CONFIRMED = false;
-  let PLAYED_ACCUM = 0;
-  let LAST_T = 0;
+  // target sites
+  function isTargetSite() {
+    const h = location.hostname.toLowerCase();
+    return h.includes("netflix.com") || h.includes("peacocktv.com");
+  }
 
   // helpers
   function cleanLines(t) { return t.split(/\r?\n/).map(s => s.trim()).filter(Boolean); }
@@ -77,7 +76,6 @@
     saveState();
   }
 
-  // canonicalization and provider IDs
   function normHost(h) { return h.toLowerCase().replace(/^www\./, ""); }
   function trimSlash(p) { return p.replace(/\/$/, ""); }
 
@@ -129,7 +127,6 @@
     }
   }
 
-  // indices
   let CANON_MAP = new Map();
   let PROVIDER_MAP = new Map();
 
@@ -147,11 +144,9 @@
     }
   }
 
-  // strict list match resolver with deterministic priority
   function resolveTypeStrict() {
     const curCanon = canon(location.href);
     const curPK = providerKey(location.href);
-
     const matchedIdxs = new Set();
     if (curCanon && CANON_MAP.has(curCanon)) {
       for (const i of CANON_MAP.get(curCanon)) matchedIdxs.add(i);
@@ -159,10 +154,7 @@
     if (curPK && PROVIDER_MAP.has(curPK)) {
       for (const i of PROVIDER_MAP.get(curPK)) matchedIdxs.add(i);
     }
-
     if (matchedIdxs.size === 0) return null;
-
-    // priority ensures SmackDown wins when mixed
     let hasSD = false, hasRAW = false, hasHEAT = false, hasPPV = false;
     for (const i of matchedIdxs) {
       const t = (STATE.master[i]?.type || "").toUpperCase();
@@ -178,7 +170,6 @@
     return null;
   }
 
-  // detect index only for progression, not for color
   function detect() {
     if (!STATE.master.length) return;
     const c = canon(location.href);
@@ -229,8 +220,24 @@
     const q = location.search;
     return /\bwwe_(autoplay|resume|start)=1\b/.test(q);
   }
+
   function panelOpen() { return !!document.getElementById("wwePanel"); }
-  function activeForThisPage() { return onAnyListedPage() || hasWweFlag() || panelOpen(); }
+
+  function activeForThisPage() {
+    return (isTargetSite() && (onAnyListedPage() || hasWweFlag())) || panelOpen();
+  }
+
+  // autoplay engine
+  let USER_PAUSED = false;
+  let AP_TIMER = null;
+  let PAUSE_GUARD_UNTIL = 0;
+  let ADVANCING = false;
+
+  const MIN_CONSIDERED_DURATION = 100;
+  const MIN_ELAPSED_TO_CONFIRM = 30;
+  let MAIN_CONFIRMED = false;
+  let PLAYED_ACCUM = 0;
+  let LAST_T = 0;
 
   function next() {
     if (!STATE.master.length) return;
@@ -290,6 +297,7 @@
   }
 
   function autoPlay() {
+    if (!isTargetSite()) return;
     const q = location.search;
     if ((!q.includes("wwe_autoplay") && !q.includes("wwe_resume") && !q.includes("wwe_start")) || USER_PAUSED) return;
     let c = 0;
@@ -318,17 +326,16 @@
 
   function resetMainFlags() { MAIN_CONFIRMED = false; PLAYED_ACCUM = 0; LAST_T = 0; }
 
+  let END_WATCH = null;
   function startEndWatch() {
+    if (!isTargetSite()) return;
     if (END_WATCH) { clearInterval(END_WATCH); END_WATCH = null; }
     END_WATCH = setInterval(() => {
       if (ADVANCING || USER_PAUSED) return;
       const v = vid();
       if (!v) return;
-
       confirmMainPlayback(v);
-
       if (!onListedPageByIndex() || !MAIN_CONFIRMED) return;
-
       if (v.ended) { scheduleNext(); return; }
       const dur = v.duration;
       const t = v.currentTime;
@@ -336,7 +343,7 @@
     }, 1000);
   }
 
-  // styles and dot
+  // dot and styles
   function ensureDotStyles() {
     if (document.getElementById("wweDotStyle")) return;
     const s = document.createElement("style");
@@ -379,12 +386,18 @@
     document.body.appendChild(d);
   }
 
+  // fast paint with rAF debounce
+  let paintReq = 0;
   function paintDot() {
-    const d = document.getElementById("wweDot");
-    if (!d) return;
-    d.style.background = colorForPage();
-    if (activeForThisPage()) d.classList.add("wwe-show");
-    else d.classList.remove("wwe-show");
+    if (paintReq) return;
+    paintReq = requestAnimationFrame(() => {
+      paintReq = 0;
+      const d = document.getElementById("wweDot");
+      if (!d) return;
+      d.style.background = colorForPage();
+      if (activeForThisPage()) d.classList.add("wwe-show");
+      else d.classList.remove("wwe-show");
+    });
   }
 
   // import export
@@ -453,13 +466,22 @@
     if (heatBox) heatBox.value = STATE.heat.join("\n");
   }
 
+  // panel
+  function closePanel() {
+    const el = document.getElementById("wwePanel");
+    if (el) {
+      el.remove();
+      paintDot();
+    }
+  }
+
   function openPanel() {
     if (document.getElementById("wwePanel")) return;
     const el = document.createElement("div");
     Object.assign(el.style, {
       position: "fixed", right: "16px", bottom: "16px", width: "620px",
       background: "rgba(16,16,16,.95)", color: "#fff", padding: "12px",
-      borderRadius: "8px", zIndex: 999999, fontFamily: "system-ui,Arial,sans-serif",
+      borderRadius: "8px", zIndex: 2147483646, fontFamily: "system-ui,Arial,sans-serif",
       display: "flex", flexDirection: "column", maxHeight: "80vh", overflow: "auto"
     });
     el.id = "wwePanel";
@@ -515,7 +537,7 @@
       build();
       detect();
       saveState();
-      startFromFirst();
+      if (isTargetSite()) startFromFirst();
     };
 
     document.getElementById("wweResume").onclick = () => {
@@ -526,7 +548,7 @@
       build();
       detect();
       saveState();
-      resumeFromCurrent();
+      if (isTargetSite()) resumeFromCurrent();
     };
 
     document.getElementById("wweExport").onclick = () => {
@@ -556,61 +578,72 @@
       reader.readAsText(f);
     };
 
-    document.getElementById("wweClose").onclick = () => {
-      el.remove();
-      paintDot();
-    };
+    document.getElementById("wweClose").onclick = closePanel;
   }
 
-  const _push = history.pushState, _repl = history.replaceState;
-  history.pushState = function () { _push.apply(this, arguments); window.dispatchEvent(new Event("wwe-route")); };
-  history.replaceState = function () { _repl.apply(this, arguments); window.dispatchEvent(new Event("wwe-route")); };
-  window.addEventListener("popstate", () => window.dispatchEvent(new Event("wwe-route")));
-  window.addEventListener("wwe-route", () => {
-    ADVANCING = false;
-    detect();
-    paintDot();
-    if (!USER_PAUSED) setTimeout(autoPlay, 400);
-    resetMainFlags();
-    startEndWatch();
-  });
+  function togglePanel() { if (panelOpen()) closePanel(); else openPanel(); }
+  function isTypingTarget(el) {
+    if (!el) return false;
+    const tag = el.tagName ? el.tagName.toLowerCase() : "";
+    const editable = el.isContentEditable;
+    return editable || tag === "input" || tag === "textarea" || tag === "select";
+  }
 
-  setInterval(() => { if (document.body) { ensureDot(); paintDot(); } }, 800);
-  build();
-  detect();
-
-  function hook() {
-    const v = vid();
-    if (!v) {
-      new MutationObserver(() => { const vv = vid(); if (vv) { hook(); } })
-        .observe(document.documentElement, { childList: true, subtree: true });
-      return;
-    }
-    v.addEventListener("playing", () => {
-      USER_PAUSED = false;
-      PAUSE_GUARD_UNTIL = 0;
-      resetMainFlags();
+  // route hooks on target sites
+  if (isTargetSite()) {
+    const _push = history.pushState, _repl = history.replaceState;
+    history.pushState = function () { _push.apply(this, arguments); window.dispatchEvent(new Event("wwe-route")); };
+    history.replaceState = function () { _repl.apply(this, arguments); window.dispatchEvent(new Event("wwe-route")); };
+    window.addEventListener("popstate", () => window.dispatchEvent(new Event("wwe-route")));
+    window.addEventListener("wwe-route", () => {
+      detect();
       paintDot();
+      setTimeout(autoPlay, 200);
+      resetMainFlags();
       startEndWatch();
     });
-    v.addEventListener("timeupdate", () => { if (!USER_PAUSED) confirmMainPlayback(v); });
-    v.addEventListener("pause", () => {
-      if (v.ended) return;
-      USER_PAUSED = true;
-      if (AP_TIMER) { clearInterval(AP_TIMER); AP_TIMER = null; }
-      PAUSE_GUARD_UNTIL = Date.now() + 7000;
-    });
-    v.addEventListener("ended", () => {
-      if (Date.now() < PAUSE_GUARD_UNTIL) return;
-      if (!onListedPageByIndex() || !MAIN_CONFIRMED) return;
-      scheduleNext();
-    });
-    startEndWatch();
   }
 
-  hook();
-  setTimeout(autoPlay, 400);
-  ensureDotStyles();
-  paintDot();
-  startEndWatch();
+  // fast boot
+  function boot() {
+    build();
+    detect();
+    ensureDot();
+    paintDot();
+    if (isTargetSite()) {
+      setTimeout(autoPlay, 200);
+      startEndWatch();
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+
+  // also make sure body exists as soon as possible
+  if (!document.body) {
+    new MutationObserver((_m, obs) => {
+      if (document.body) { obs.disconnect(); ensureDot(); paintDot(); }
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  // global hotkey
+  window.addEventListener("keydown", (e) => {
+    if (isTypingTarget(document.activeElement)) return;
+    if (e.code === HOTKEY_CODE
+        && (!!HOTKEY_CTRL === e.ctrlKey)
+        && (!!HOTKEY_ALT === e.altKey)
+        && (!!HOTKEY_SHIFT === e.shiftKey)) {
+      e.preventDefault();
+      togglePanel();
+    }
+  });
+
+  // menu commands
+  if (typeof GM_registerMenuCommand === "function") {
+    GM_registerMenuCommand("Open WWE ShowRunner panel", () => openPanel());
+    GM_registerMenuCommand("Close WWE ShowRunner panel", () => closePanel());
+  }
 })();
