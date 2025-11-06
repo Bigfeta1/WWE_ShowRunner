@@ -132,7 +132,7 @@ If autoplay is blocked at either level, ShowRunner cannot automatically continue
 #### 2. Enable Autoplay in Streaming Accounts
 
 **Netflix:**  
-1. Go to [Netflix Playback Settings](https://www.netflix.com/YourAccount).  
+1. Go to [Netflix Playback Settings](https://www.netflix.com/settings).  
 2. Under **Playback Settings**, check **“Autoplay next episode in a series on all devices.”**  
 3. Save your changes.  
 
