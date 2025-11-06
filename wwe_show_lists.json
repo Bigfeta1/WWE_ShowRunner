@@ -1,0 +1,77 @@
+{
+  "format": "wweAltLists",
+  "version": "1",
+  "exportedAt": "2025-11-06T00:30:33.815Z",
+  "lists": {
+    "raw": [
+      "1999-04-12 https://www.netflix.com/watch/81937939?trackId=14277283&tctx=-97%2C-97%2C%2C%2C%2C%2C%2C%2C81990480%2CVideo%3A81937939%2CdetailsPageEpisodePlayButton",
+      "1999-05-10 https://www.netflix.com/watch/81937943?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937943%2CdetailsPageEpisodePlayButton",
+      "1999-06-14 https://www.netflix.com/watch/81937948?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937948%2CdetailsPageEpisodePlayButton",
+      "1999-08-09 https://www.netflix.com/watch/81937956?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937956%2CdetailsPageEpisodePlayButton",
+      "1999-09-06 https://www.netflix.com/watch/81937960?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937960%2CdetailsPageEpisodePlayButton",
+      "1999-09-27 https://www.netflix.com/watch/81937963?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937963%2CdetailsPageEpisodePlayButton",
+      "1999-12-20 https://www.netflix.com/watch/81937975?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937975%2CdetailsPageEpisodePlayButton",
+      "1999-12-27 https://www.netflix.com/watch/81937976?trackId=284616272&tctx=0%2C2%2C04043f9d-ed2a-43c0-9934-d749174681d2%2C04043f9d-ed2a-43c0-9934-d749174681d2%7C%3DeyJwYWdlSWQiOiI3NzU3MTc5NS1iN2RkLTRiYTQtOTA0Ny1lYmE1NWUzM2IwM2UvMS8vcmF3LzAvMCIsImxvY2FsU2VjdGlvbklkIjoiMiJ9%2C%2C%2C%2C%2C81990480%2CVideo%3A81937976%2CdetailsPageEpisodePlayButton"
+    ],
+    "sd": [
+      "# Season 1",
+      "1999-04-29 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372824_01/c4fe6d7c-f08d-31f1-b9e6-455a9dc47370",
+      "1999-08-26 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372825_01/13878d96-e1a4-3546-9396-23483d949fae",
+      "1999-09-02 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372826_01/c3da34d2-fad6-3361-afcd-24ef5e4cf808",
+      "1999-09-09 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372827_01/cc6b8a43-ce8b-397b-80e5-9b6bd7b98462",
+      "1999-09-16 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372829_01/7c364d49-3974-39a6-81dc-aaeb9841ab8c",
+      "1999-09-23 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372830_01/0dde3e95-a149-369b-b15a-f81ed826e633",
+      "1999-09-30 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372831_01/16c8d490-7b7e-330d-a573-78c24ad46a60",
+      "1999-10-07 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372832_01/9f99b282-75ba-328e-87ec-37ba30671fbb",
+      "1999-10-14 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372833_01/2606a590-630f-38d6-830d-7dcece2a2814",
+      "1999-10-21 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372834_01/132a2fb0-f222-3909-a99f-e9679939b162",
+      "1999-10-28 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372835_01/a22131df-5701-35c7-b804-f27f45a793fd",
+      "1999-11-04 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372836_01/535105a8-0e7e-3915-a4f6-95f939530ddb",
+      "1999-11-11 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372837_01/b8706eb0-95e4-3d11-a9bb-b635f893ec2e",
+      "1999-11-18 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372838_01/792e9961-3f38-38be-b49a-7539c7ca267d",
+      "1999-11-25 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372839_01/628d60dc-fec1-3dca-8b63-1e0993b1bd60",
+      "1999-12-02 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372840_01/a4528d3b-a180-306f-9495-a708cc06b5c5",
+      "1999-12-09 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372841_01/9f10c495-0e29-3d84-91d7-2f7ba8394e2d",
+      "1999-12-16 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372842_01/7f5c0732-409e-3020-9946-92491a17a8df",
+      "1999-12-23 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372843_01/ba29249a-83ef-35ca-869b-a95903943ef9",
+      "1999-12-30 https://www.peacocktv.com/watch/playback/vod/GMO_00000000372844_01/7d01f9be-57ed-301f-8ebe-8f0b1b5a4d40",
+
+      "Season 2"
+    ],
+    "ppv": [
+      "# Wrestlemania 15",
+      "1999-03-28 https://www.peacocktv.com/watch/playback/vod/GMO_00000000375168_01/32994043-b592-3817-a9f2-ed1f80c8e814",
+
+
+      "1999-04-25 https://www.peacocktv.com/watch/playback/vod/GMO_00000000375149_01/09d64f98-08b8-351f-8a90-c29970e9a976",
+      "1999-05-16 https://www.peacocktv.com/watch/playback/vod/GMO_00000000374710_01/ecef3eb8-59f8-336e-91a1-a72b87986094",
+      "1999-05-23 https://www.peacocktv.com/watch/playback/vod/GMO_00000000374712_01/0ea5d09f-ca09-372e-9be4-4ca57e37719a",
+      "1999-06-27 https://www.peacocktv.com/watch/playback/vod/GMO_00000000375031_01/51dec1c1-1d92-3b2b-9ebd-8b6227b34a39",
+      "1999-07-25 https://www.peacocktv.com/watch/playback/vod/GMO_00000000378090_01/6317735c-0650-32f5-a681-048a27f8450e",
+      "1999-08-22 https://www.peacocktv.com/watch/playback/vod/GMO_00000000374909_01/4b56b781-9ab5-3b54-bb2f-17ab8c324954",
+      "1999-09-26 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377926_01/559d4293-4acf-3c7a-acab-147e2464a627",
+      "1999-10-02 https://www.peacocktv.com/watch/playback/vod/GMO_00000000378690_01/55f42f1a-2f87-3861-8154-1d5490b7474d",
+      "1999-10-17 https://www.peacocktv.com/watch/playback/vod/GMO_00000000378388_01/dc31c8c7-3496-3d0a-b14c-630856bf9f5a",
+      "1999-11-14 https://www.peacocktv.com/watch/playback/vod/GMO_00000000375065_01/39d4eebe-9155-3a42-ab7a-9390e74f424d",
+      "1999-12-12 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377910_01/430f26a6-de14-377d-94e9-133a642cc941"
+    ],
+    "heat": [
+      "1999-04-11 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377893_01/706fee82-3e2d-3fe0-9812-1b2b79b4fbb6",
+      "1999-04-18 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377894_01/a5e9cc93-7dc5-3888-b02b-73280edb7340",
+      "1999-04-25 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377895_01/6ea866af-0021-3036-8caa-2150497e4538",
+      "1999-05-02 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377896_01/ef552984-8fe2-3a56-8d49-c5ac0d8738da",
+      "1999-05-09 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377897_01/f6e591ef-1c1c-33c5-b63d-eca6171ca3f7",
+      "1999-05-16 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377898_01/09876f05-317b-3e95-ac55-3e242a03b6b3",
+      "1999-05-23 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377899_01/b39faa3d-03c0-3607-8735-e203d8488882",
+      "1999-05-30 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377900_01/bedb2f6e-0940-34f2-9282-8c3dc3aa3a02",
+      "1999-06-06 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377901_01/1f2143d1-55d8-3245-8e91-4479475bc3e5",
+      "1999-06-13 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377902_01/5c75c581-065e-30cb-9d0b-7024b29c8768",
+      "1999-06-20 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377903_01/aafc419a-f135-3d13-af1f-9a5b65d1ec5e",
+      "1999-06-27 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377904_01/eff99b42-3052-37bf-8468-d72384289b5a",
+      "1999-07-04 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377905_01/694c7ae8-3da4-335f-87f7-70420317d479",
+      "1999-07-11 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377906_01/b7d1f07e-4451-3eed-b47a-f4fb2d5cb2de",
+      "1999-07-18 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377907_01/a3e542af-488d-3988-9b9c-62c4971f0c95",
+      "1999-07-25 https://www.peacocktv.com/watch/playback/vod/GMO_00000000377908_01/c3cc95d6-1bc6-3b85-a43a-45f09342026d"
+    ]
+  }
+}
