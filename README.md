@@ -14,7 +14,7 @@ Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in th
 - Import and export episode lists as JSON files  
 - Detects and ignores teaser or background animations on Peacock  
 - Color-coded indicator dot showing current show type  
-- Lightweight always-on design—no manual activation needed  
+- Lightweight "always-on" design (no manual activation needed)  
 
 ---
 ## Installation
