@@ -17,8 +17,11 @@ This userscript automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat*
 - Lightweight always-on design—no manual activation needed  
 
 ---
-
 ## Installation
+
+Requirements
+- Active Netflix Subscription (US)
+- Active PeacockTV Subscription (US)
 
 1. Install and enable **Tampermonkey** in your browser  
    - [Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
