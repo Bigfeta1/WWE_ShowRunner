@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WWE ShowRunner
 // @namespace    wwe-alt-cross-provider
-// @version      1.6
-// @description  Chronological cross show autoplay for RAW, SmackDown, PPV, Heat on Netflix and Peacock. Runs on all sites so hotkey and panel are always available. The dot only shows on target sites. Startup made fast.
+// @version      1.6.1
+// @description  Chronological cross show autoplay for RAW, SmackDown, PPV, Heat on Netflix and Peacock. Runs on all sites so hotkey and panel are always available. The dot only shows on target sites. Start and Resume work from any page.
 // @match        *://*/*
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -343,7 +343,7 @@
     }, 1000);
   }
 
-  // dot and styles
+  // styles and dot
   function ensureDotStyles() {
     if (document.getElementById("wweDotStyle")) return;
     const s = document.createElement("style");
@@ -518,6 +518,7 @@
     populateTextAreasFromState();
     paintDot();
 
+    // Save
     document.getElementById("wweSave").onclick = () => {
       STATE.raw  = cleanLines(document.getElementById("rawBox").value);
       STATE.sd   = cleanLines(document.getElementById("sdBox").value);
@@ -529,6 +530,7 @@
       paintDot();
     };
 
+    // Start from first item regardless of current site
     document.getElementById("wweStart").onclick = () => {
       STATE.raw  = cleanLines(document.getElementById("rawBox").value);
       STATE.sd   = cleanLines(document.getElementById("sdBox").value);
@@ -537,9 +539,10 @@
       build();
       detect();
       saveState();
-      if (isTargetSite()) startFromFirst();
+      startFromFirst(); // removed isTargetSite() gate
     };
 
+    // Resume from current index regardless of current site
     document.getElementById("wweResume").onclick = () => {
       STATE.raw  = cleanLines(document.getElementById("rawBox").value);
       STATE.sd   = cleanLines(document.getElementById("sdBox").value);
@@ -548,9 +551,10 @@
       build();
       detect();
       saveState();
-      if (isTargetSite()) resumeFromCurrent();
+      resumeFromCurrent(); // removed isTargetSite() gate
     };
 
+    // Export
     document.getElementById("wweExport").onclick = () => {
       STATE.raw  = cleanLines(document.getElementById("rawBox").value);
       STATE.sd   = cleanLines(document.getElementById("sdBox").value);
@@ -559,6 +563,7 @@
       exportLists();
     };
 
+    // Import
     const fileInput = document.getElementById("wweImportFile");
     document.getElementById("wweImport").onclick = () => fileInput.click();
     fileInput.onchange = () => {
@@ -622,7 +627,6 @@
     boot();
   }
 
-  // also make sure body exists as soon as possible
   if (!document.body) {
     new MutationObserver((_m, obs) => {
       if (document.body) { obs.disconnect(); ensureDot(); paintDot(); }
