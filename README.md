@@ -41,7 +41,7 @@ Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in th
    - Copy the entire code, paste it into Tampermonkey, then click **File → Save**.
    - Exit Tampermonkey.
 
-Once installed, reload your browser and then hit "ctrl + alt + /". You should see The panel open up at the bottom right of the screen.
+Once installed, reload your browser. Firefox users should also ensure they are not on an empty tab (i.e visit any webpage like google). Then, hit "ctrl + alt + /". You should see The panel open up at the bottom right of the screen.
 If this does not appeare, the installation was unsuccessful. After confirming the installation, load the show order:
 
 1. Download `WWE_show_lists.json`.
@@ -55,7 +55,8 @@ To confirm that the episodes were loaded, you should see the lists populate in t
 
 ## Usage
 
-1. Press "ctrl + alt + /" to open the control pane (alternatively, you can click the colored circle at bottom right during an episode)
+1. Ensure you are not on an empty tab (i.e go to google or any website)
+2. Press "ctrl + alt + /" to open the control pane (alternatively, you can click the colored circle at bottom right during an episode)
 3. Add or import your lists of shows (RAW, SD, PPV, HEAT).  
 4. Click **Save** to update your list.  
 5. Use **Start** to begin from the first chronological episode (Wrestlemania 15 for now), or **Resume** to continue from your last watched episode.  
