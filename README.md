@@ -1,7 +1,7 @@
 # WWE ShowRunner
 
 A hands-free chronological show runner for **WWE content** across **Peacock** and **Netflix**.  
-This userscript automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in the correct historical order, switching platforms when necessary. The episode list is still expanding, and contributions are welcome to help complete the chronology.
+Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in the correct historical order, switching platforms when necessary. The episode list is still expanding, and contributions are welcome to help complete the chronology.
 
 ---
 
