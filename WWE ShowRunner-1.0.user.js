@@ -266,4 +266,252 @@
   }
 
   function ensureDot() {
-    if (document.getElementById("ww
+    if (document.getElementById("wweDot")) return;
+    const d = document.createElement("div");
+    Object.assign(d.style, {
+      position: "fixed", right: "12px", bottom: "12px",
+      width: "18px", height: "18px", zIndex: 999999,
+      background: color(currentType()), borderRadius: "50%", cursor: "pointer"
+    });
+    d.id = "wweDot";
+    d.onclick = openPanel;
+    document.body.appendChild(d);
+  }
+
+  function paintDot() {
+    const d = document.getElementById("wweDot");
+    if (d) d.style.background = color(currentType());
+  }
+
+  // import export
+  function serializeLists() {
+    return {
+      format: "wweAltLists",
+      version: "1",
+      exportedAt: new Date().toISOString(),
+      lists: {
+        raw: Array.isArray(STATE.raw) ? STATE.raw : [],
+        sd: Array.isArray(STATE.sd) ? STATE.sd : [],
+        ppv: Array.isArray(STATE.ppv) ? STATE.ppv : [],
+        heat: Array.isArray(STATE.heat) ? STATE.heat : []
+      }
+    };
+  }
+
+  function downloadJSON(filename, dataObj) {
+    const blob = new Blob([JSON.stringify(dataObj, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 0);
+  }
+
+  function exportLists() {
+    const payload = serializeLists();
+    const stamp = new Date().toISOString().replace(/[:.]/g, "_");
+    downloadJSON(`wwe_lists_${stamp}.json`, payload);
+  }
+
+  function isValidPayload(obj) {
+    return obj
+      && obj.format === "wweAltLists"
+      && obj.lists
+      && Array.isArray(obj.lists.raw)
+      && Array.isArray(obj.lists.sd)
+      && Array.isArray(obj.lists.ppv)
+      && Array.isArray(obj.lists.heat)
+      && obj.lists.raw.every(s => typeof s === "string")
+      && obj.lists.sd.every(s => typeof s === "string")
+      && obj.lists.ppv.every(s => typeof s === "string")
+      && obj.lists.heat.every(s => typeof s === "string");
+  }
+
+  function applyImportedLists(obj) {
+    STATE.raw = obj.lists.raw.slice();
+    STATE.sd = obj.lists.sd.slice();
+    STATE.ppv = obj.lists.ppv.slice();
+    STATE.heat = obj.lists.heat.slice();
+    build();
+    detect();
+    saveState();
+    paintDot();
+  }
+
+  function populateTextAreasFromState() {
+    const rawBox = document.getElementById("rawBox");
+    const sdBox = document.getElementById("sdBox");
+    const ppvBox = document.getElementById("ppvBox");
+    const heatBox = document.getElementById("heatBox");
+    if (rawBox) rawBox.value = STATE.raw.join("\n");
+    if (sdBox) sdBox.value = STATE.sd.join("\n");
+    if (ppvBox) ppvBox.value = STATE.ppv.join("\n");
+    if (heatBox) heatBox.value = STATE.heat.join("\n");
+  }
+
+  function openPanel() {
+    if (document.getElementById("wwePanel")) return;
+    const el = document.createElement("div");
+    Object.assign(el.style, {
+      position: "fixed", right: "16px", bottom: "16px", width: "620px",
+      background: "rgba(16,16,16,.95)", color: "#fff", padding: "12px",
+      borderRadius: "8px", zIndex: 999999, fontFamily: "system-ui,Arial,sans-serif",
+      display: "flex", flexDirection: "column", maxHeight: "80vh", overflow: "auto"
+    });
+    el.id = "wwePanel";
+    el.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-weight:600;">WWE Alternator</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button id="wweStart"  style="background:#0a84ff;color:#fff;border:0;padding:4px 10px;border-radius:6px;cursor:pointer;">Start</button>
+          <button id="wweResume" style="background:#34c759;color:#fff;border:0;padding:4px 10px;border-radius:6px;cursor:pointer;">Resume</button>
+          <button id="wweClose"  style="background:#333;color:#fff;border:0;padding:4px 8px;border-radius:6px;cursor:pointer;">Close</button>
+        </div>
+      </div>
+
+      <div id="wweBody" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div><div>RAW</div><textarea id="rawBox"  style="width:100%;height:120px;background:#111;color:#ddd;"></textarea></div>
+          <div><div>SD</div><textarea  id="sdBox"   style="width:100%;height:120px;background:#111;color:#ddd;"></textarea></div>
+          <div><div>PPV</div><textarea id="ppvBox"  style="width:100%;height:120px;background:#111;color:#ddd;"></textarea></div>
+          <div><div>HEAT</div><textarea id="heatBox" style="width:100%;height:120px;background:#111;color:#ddd;"></textarea></div>
+        </div>
+
+        <div id="wweToolbar" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+          <button id="wweSave" style="background:#0a84ff;color:#fff;border:0;padding:6px 10px;border-radius:6px;cursor:pointer;">Save</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="wweExport" style="background:#8e8e93;color:#fff;border:0;padding:6px 10px;border-radius:6px;cursor:pointer;">Export</button>
+            <button id="wweImport" style="background:#ff9f0a;color:#1b1b1b;border:0;padding:6px 10px;border-radius:6px;cursor:pointer;">Import</button>
+            <input id="wweImportFile" type="file" accept="application/json,.json" style="display:none;">
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(el);
+
+    populateTextAreasFromState();
+
+    document.getElementById("wweSave").onclick = () => {
+      STATE.raw  = cleanLines(document.getElementById("rawBox").value);
+      STATE.sd   = cleanLines(document.getElementById("sdBox").value);
+      STATE.ppv  = cleanLines(document.getElementById("ppvBox").value);
+      STATE.heat = cleanLines(document.getElementById("heatBox").value);
+      build();
+      detect();
+      saveState();
+      paintDot();
+    };
+
+    document.getElementById("wweStart").onclick = () => {
+      STATE.raw  = cleanLines(document.getElementById("rawBox").value);
+      STATE.sd   = cleanLines(document.getElementById("sdBox").value);
+      STATE.ppv  = cleanLines(document.getElementById("ppvBox").value);
+      STATE.heat = cleanLines(document.getElementById("heatBox").value);
+      build();
+      detect();
+      saveState();
+      startFromFirst();
+    };
+
+    document.getElementById("wweResume").onclick = () => {
+      STATE.raw  = cleanLines(document.getElementById("rawBox").value);
+      STATE.sd   = cleanLines(document.getElementById("sdBox").value);
+      STATE.ppv  = cleanLines(document.getElementById("ppvBox").value);
+      STATE.heat = cleanLines(document.getElementById("heatBox").value);
+      build();
+      detect();
+      saveState();
+      resumeFromCurrent();
+    };
+
+    document.getElementById("wweExport").onclick = () => {
+      STATE.raw  = cleanLines(document.getElementById("rawBox").value);
+      STATE.sd   = cleanLines(document.getElementById("sdBox").value);
+      STATE.ppv  = cleanLines(document.getElementById("ppvBox").value);
+      STATE.heat = cleanLines(document.getElementById("heatBox").value);
+      exportLists();
+    };
+
+    const fileInput = document.getElementById("wweImportFile");
+    document.getElementById("wweImport").onclick = () => fileInput.click();
+    fileInput.onchange = () => {
+      const f = fileInput.files && fileInput.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const obj = JSON.parse(String(reader.result || "{}"));
+          if (isValidPayload(obj)) {
+            applyImportedLists(obj);
+            populateTextAreasFromState();
+          }
+        } catch {}
+        fileInput.value = "";
+      };
+      reader.readAsText(f);
+    };
+
+    document.getElementById("wweClose").onclick = () => el.remove();
+  }
+
+  const _push = history.pushState, _repl = history.replaceState;
+  history.pushState = function () { _push.apply(this, arguments); window.dispatchEvent(new Event("wwe-route")); };
+  history.replaceState = function () { _repl.apply(this, arguments); window.dispatchEvent(new Event("wwe-route")); };
+  window.addEventListener("popstate", () => window.dispatchEvent(new Event("wwe-route")));
+  window.addEventListener("wwe-route", () => {
+    ADVANCING = false;
+    detect();
+    paintDot();
+    if (!USER_PAUSED) setTimeout(autoPlay, 400);
+    resetMainFlags();
+    startEndWatch();
+  });
+
+  setInterval(() => { if (document.body) { ensureDot(); paintDot(); } }, 800);
+  build();
+  detect();
+
+  function hook() {
+    const v = vid();
+    if (!v) {
+      new MutationObserver(() => { const vv = vid(); if (vv) { hook(); } })
+        .observe(document.documentElement, { childList: true, subtree: true });
+      return;
+    }
+    v.addEventListener("playing", () => {
+      USER_PAUSED = false;
+      PAUSE_GUARD_UNTIL = 0;
+      resetMainFlags();
+      paintDot();
+      startEndWatch();
+    });
+    v.addEventListener("timeupdate", () => {
+      if (!USER_PAUSED) {
+        confirmMainPlayback(v);
+      }
+    });
+    v.addEventListener("pause", () => {
+      if (v.ended) return;
+      USER_PAUSED = true;
+      if (AP_TIMER) { clearInterval(AP_TIMER); AP_TIMER = null; }
+      PAUSE_GUARD_UNTIL = Date.now() + 7000;
+    });
+    v.addEventListener("ended", () => {
+      // do not advance on teasers or non-listed pages
+      if (Date.now() < PAUSE_GUARD_UNTIL) return;
+      if (!onListedPage() || !MAIN_CONFIRMED) return;
+      scheduleNext();
+    });
+    startEndWatch();
+  }
+
+  hook();
+  setTimeout(autoPlay, 400);
+  paintDot();
+  startEndWatch();
+})();
