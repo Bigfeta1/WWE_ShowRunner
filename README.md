@@ -51,6 +51,9 @@ If this does not appeare, the installation was unsuccessful. After confirming th
 
 To confirm that the episodes were loaded, you should see the lists populate in the extension.
 
+<img width="1909" height="925" alt="image" src="https://github.com/user-attachments/assets/d806fc21-7236-41da-9cfd-036db232d1de" />
+
+
 ---
 
 ## Usage
