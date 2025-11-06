@@ -60,8 +60,8 @@
   let END_WATCH = null;
 
   // main-video confirmation to ignore teasers
-  const MIN_CONSIDERED_DURATION = 100; // seconds; shorter videos are likely teasers
-  const MIN_ELAPSED_TO_CONFIRM   = 30;  // seconds watched to confirm main playback
+  const MIN_CONSIDERED_DURATION = 100; // seconds
+  const MIN_ELAPSED_TO_CONFIRM   = 30;  // seconds
   let MAIN_CONFIRMED = false;
   let PLAYED_ACCUM = 0;
   let LAST_T = 0;
@@ -145,6 +145,18 @@
     return canon(location.href) === canon(cur.url);
   }
 
+  // narrow rule for dot visibility
+  function hasWweFlag() {
+    const q = location.search;
+    return /\bwwe_(autoplay|resume|start)=1\b/.test(q);
+  }
+  function panelOpen() {
+    return !!document.getElementById("wwePanel");
+  }
+  function activeForThisPage() {
+    return onListedPage() || hasWweFlag() || panelOpen();
+  }
+
   function next() {
     if (!STATE.master.length) return;
     USER_PAUSED = false;
@@ -185,7 +197,6 @@
   }
 
   function vid() {
-    // prefer the first <video> found in shadow roots or DOM
     const v = document.querySelector("video");
     if (v) return v;
     for (const e of document.querySelectorAll("*")) {
@@ -215,14 +226,12 @@
   }
 
   function confirmMainPlayback(v) {
-    // update accumulators and set MAIN_CONFIRMED when safe
     const dur = v.duration;
     const t = v.currentTime;
     const delta = Math.max(0, t - LAST_T);
     LAST_T = t;
     PLAYED_ACCUM += delta;
 
-    // treat very short or looping muted videos as teasers
     const looksLikeTeaser = Number.isFinite(dur) && dur > 0 && dur < MIN_CONSIDERED_DURATION;
     const likelyBackground = v.loop || (v.muted && !v.controls);
 
@@ -230,7 +239,6 @@
       if (!looksLikeTeaser && PLAYED_ACCUM >= MIN_ELAPSED_TO_CONFIRM) {
         MAIN_CONFIRMED = true;
       }
-      // if it looks like a teaser, never confirm
       if (likelyBackground && looksLikeTeaser) {
         MAIN_CONFIRMED = false;
       }
@@ -250,10 +258,8 @@
       const v = vid();
       if (!v) return;
 
-      // keep confirming as playback proceeds
       confirmMainPlayback(v);
 
-      // advance only if on a listed page and main playback confirmed
       if (!onListedPage() || !MAIN_CONFIRMED) return;
 
       if (v.ended) { scheduleNext(); return; }
@@ -271,7 +277,8 @@
     Object.assign(d.style, {
       position: "fixed", right: "12px", bottom: "12px",
       width: "18px", height: "18px", zIndex: 999999,
-      background: color(currentType()), borderRadius: "50%", cursor: "pointer"
+      background: color(currentType()), borderRadius: "50%", cursor: "pointer",
+      display: "none"
     });
     d.id = "wweDot";
     d.onclick = openPanel;
@@ -280,7 +287,9 @@
 
   function paintDot() {
     const d = document.getElementById("wweDot");
-    if (d) d.style.background = color(currentType());
+    if (!d) return;
+    d.style.background = color(currentType());
+    d.style.display = activeForThisPage() ? "block" : "none";
   }
 
   // import export
@@ -366,7 +375,7 @@
     el.id = "wwePanel";
     el.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <div style="font-weight:600;">WWE Alternator</div>
+        <div style="font-weight:600;">WWE ShowRunner</div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button id="wweStart"  style="background:#0a84ff;color:#fff;border:0;padding:4px 10px;border-radius:6px;cursor:pointer;">Start</button>
           <button id="wweResume" style="background:#34c759;color:#fff;border:0;padding:4px 10px;border-radius:6px;cursor:pointer;">Resume</button>
@@ -395,6 +404,7 @@
     document.body.appendChild(el);
 
     populateTextAreasFromState();
+    paintDot();
 
     document.getElementById("wweSave").onclick = () => {
       STATE.raw  = cleanLines(document.getElementById("rawBox").value);
@@ -456,7 +466,10 @@
       reader.readAsText(f);
     };
 
-    document.getElementById("wweClose").onclick = () => el.remove();
+    document.getElementById("wweClose").onclick = () => {
+      el.remove();
+      paintDot();
+    };
   }
 
   const _push = history.pushState, _repl = history.replaceState;
@@ -502,7 +515,6 @@
       PAUSE_GUARD_UNTIL = Date.now() + 7000;
     });
     v.addEventListener("ended", () => {
-      // do not advance on teasers or non-listed pages
       if (Date.now() < PAUSE_GUARD_UNTIL) return;
       if (!onListedPage() || !MAIN_CONFIRMED) return;
       scheduleNext();
