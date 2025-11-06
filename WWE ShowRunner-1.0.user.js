@@ -17,24 +17,14 @@
   const GM_KEY = "wweAlt.state";
   const LS_KEY = "wweAlt.v231";
 
-  function readGM() {
-    try { return GM_getValue(GM_KEY); } catch { return null; }
-  }
-  function writeGM(obj) {
-    try { GM_setValue(GM_KEY, JSON.stringify(obj)); } catch {}
-  }
-  function readLS() {
-    try { return localStorage.getItem(LS_KEY); } catch { return null; }
-  }
-  function clearLS() {
-    try { localStorage.removeItem(LS_KEY); } catch {}
-  }
+  function readGM() { try { return GM_getValue(GM_KEY); } catch { return null; } }
+  function writeGM(obj) { try { GM_setValue(GM_KEY, JSON.stringify(obj)); } catch {} }
+  function readLS() { try { return localStorage.getItem(LS_KEY); } catch { return null; } }
+  function clearLS() { try { localStorage.removeItem(LS_KEY); } catch {} }
 
   function loadState() {
     const gmRaw = readGM();
-    if (gmRaw) {
-      try { return JSON.parse(gmRaw); } catch {}
-    }
+    if (gmRaw) { try { return JSON.parse(gmRaw); } catch {} }
     const lsRaw = readLS();
     if (lsRaw) {
       try {
@@ -59,9 +49,9 @@
   let ADVANCING = false;
   let END_WATCH = null;
 
-  // main-video confirmation to ignore teasers
-  const MIN_CONSIDERED_DURATION = 100; // seconds
-  const MIN_ELAPSED_TO_CONFIRM   = 30;  // seconds
+  // teaser guards
+  const MIN_CONSIDERED_DURATION = 100;
+  const MIN_ELAPSED_TO_CONFIRM = 30;
   let MAIN_CONFIRMED = false;
   let PLAYED_ACCUM = 0;
   let LAST_T = 0;
@@ -83,41 +73,125 @@
     a.sort((x, y) => x.date < y.date ? -1 : x.date > y.date ? 1 : 0);
     STATE.master = a;
     if (STATE.i >= a.length) STATE.i = 0;
+    rebuildIndexes();
     saveState();
   }
 
-  function canon(h) {
+  // canonicalization and provider IDs
+  function normHost(h) { return h.toLowerCase().replace(/^www\./, ""); }
+  function trimSlash(p) { return p.replace(/\/$/, ""); }
+
+  function netflixIdFromPath(path) {
+    const m = path.match(/\/(title|watch)\/(\d{4,})/i);
+    if (m) return m[2];
+    const any = path.match(/(\d{4,})/);
+    return any ? any[1] : null;
+  }
+  function peacockTokenFromPath(path) {
+    const m = path.match(/\/watch\/([^/]+)/i);
+    return m ? m[1] : null;
+  }
+
+  function providerKey(href) {
     try {
-      const u = new URL(h);
-      u.search = "";
-      const host = u.host.toLowerCase();
-      const path = u.pathname.replace(/\/$/, "");
+      const u = new URL(href);
+      const host = normHost(u.host);
+      const path = trimSlash(u.pathname);
       if (host.includes("netflix.com")) {
-        const id = path.match(/\/(title|watch)\/(\d{4,})/i)?.[2] || path.match(/(\d{4,})/)?.[1];
+        const id = netflixIdFromPath(path);
+        return id ? "nf:" + id : null;
+      }
+      if (host.includes("peacocktv.com")) {
+        const tok = peacockTokenFromPath(path);
+        return tok ? "pk:" + tok : null;
+      }
+    } catch {}
+    return null;
+  }
+
+  function canon(href) {
+    try {
+      const u = new URL(href);
+      u.search = "";
+      const host = normHost(u.host);
+      const path = trimSlash(u.pathname);
+      if (host.includes("netflix.com")) {
+        const id = netflixIdFromPath(path);
         return id ? host + "/id/" + id : host + path;
       }
       if (host.includes("peacocktv.com")) {
-        const tok = path.match(/\/watch\/([^/]+)/i)?.[1];
+        const tok = peacockTokenFromPath(path);
         return tok ? host + "/watch/" + tok : host + path;
       }
       return host + path;
     } catch {
-      return h;
+      return href;
     }
   }
 
+  // indices
+  let CANON_MAP = new Map();
+  let PROVIDER_MAP = new Map();
+
+  function mapPush(map, key, idx) { if (!map.has(key)) map.set(key, []); map.get(key).push(idx); }
+
+  function rebuildIndexes() {
+    CANON_MAP = new Map();
+    PROVIDER_MAP = new Map();
+    for (let i = 0; i < STATE.master.length; i++) {
+      const e = STATE.master[i];
+      const c = canon(e.url);
+      if (c) mapPush(CANON_MAP, c, i);
+      const pk = providerKey(e.url);
+      if (pk) mapPush(PROVIDER_MAP, pk, i);
+    }
+  }
+
+  // strict list match resolver with deterministic priority
+  function resolveTypeStrict() {
+    const curCanon = canon(location.href);
+    const curPK = providerKey(location.href);
+
+    const matchedIdxs = new Set();
+    if (curCanon && CANON_MAP.has(curCanon)) {
+      for (const i of CANON_MAP.get(curCanon)) matchedIdxs.add(i);
+    }
+    if (curPK && PROVIDER_MAP.has(curPK)) {
+      for (const i of PROVIDER_MAP.get(curPK)) matchedIdxs.add(i);
+    }
+
+    if (matchedIdxs.size === 0) return null;
+
+    // priority ensures SmackDown wins when mixed
+    let hasSD = false, hasRAW = false, hasHEAT = false, hasPPV = false;
+    for (const i of matchedIdxs) {
+      const t = (STATE.master[i]?.type || "").toUpperCase();
+      if (t === "SD") hasSD = true;
+      else if (t === "RAW") hasRAW = true;
+      else if (t === "HEAT") hasHEAT = true;
+      else if (t === "PPV") hasPPV = true;
+    }
+    if (hasSD) return "SD";
+    if (hasRAW) return "RAW";
+    if (hasHEAT) return "HEAT";
+    if (hasPPV) return "PPV";
+    return null;
+  }
+
+  // detect index only for progression, not for color
   function detect() {
     if (!STATE.master.length) return;
     const c = canon(location.href);
-    const idx = STATE.master.findIndex(x => canon(x.url) === c);
-    if (idx >= 0) { STATE.i = idx; saveState(); }
+    const arr = c ? CANON_MAP.get(c) : null;
+    if (arr && arr.length) { STATE.i = arr[0]; saveState(); return; }
+    const pk = providerKey(location.href);
+    const arr2 = pk ? PROVIDER_MAP.get(pk) : null;
+    if (arr2 && arr2.length) { STATE.i = arr2[0]; saveState(); }
   }
 
-  function currentType() {
-    const pType = new URLSearchParams(location.search).get("wwe_type");
-    if (pType) return pType.toUpperCase();
-    const cur = STATE.master[STATE.i];
-    return cur ? cur.type : null;
+  function colorForPage() {
+    const t = resolveTypeStrict();
+    return color(t);
   }
 
   function color(t) {
@@ -138,24 +212,25 @@
     setTimeout(() => { location.href = u.toString(); }, 300);
   }
 
-  function onListedPage() {
-    if (!STATE.master.length) return false;
+  function onListedPageByIndex() {
     const cur = STATE.master[STATE.i];
     if (!cur) return false;
     return canon(location.href) === canon(cur.url);
   }
 
-  // narrow rule for dot visibility
+  function onAnyListedPage() {
+    const c = canon(location.href);
+    if (c && CANON_MAP.has(c)) return true;
+    const pk = providerKey(location.href);
+    return pk ? PROVIDER_MAP.has(pk) : false;
+  }
+
   function hasWweFlag() {
     const q = location.search;
     return /\bwwe_(autoplay|resume|start)=1\b/.test(q);
   }
-  function panelOpen() {
-    return !!document.getElementById("wwePanel");
-  }
-  function activeForThisPage() {
-    return onListedPage() || hasWweFlag() || panelOpen();
-  }
+  function panelOpen() { return !!document.getElementById("wwePanel"); }
+  function activeForThisPage() { return onAnyListedPage() || hasWweFlag() || panelOpen(); }
 
   function next() {
     if (!STATE.master.length) return;
@@ -236,20 +311,12 @@
     const likelyBackground = v.loop || (v.muted && !v.controls);
 
     if (!MAIN_CONFIRMED) {
-      if (!looksLikeTeaser && PLAYED_ACCUM >= MIN_ELAPSED_TO_CONFIRM) {
-        MAIN_CONFIRMED = true;
-      }
-      if (likelyBackground && looksLikeTeaser) {
-        MAIN_CONFIRMED = false;
-      }
+      if (!looksLikeTeaser && PLAYED_ACCUM >= MIN_ELAPSED_TO_CONFIRM) MAIN_CONFIRMED = true;
+      if (likelyBackground && looksLikeTeaser) MAIN_CONFIRMED = false;
     }
   }
 
-  function resetMainFlags() {
-    MAIN_CONFIRMED = false;
-    PLAYED_ACCUM = 0;
-    LAST_T = 0;
-  }
+  function resetMainFlags() { MAIN_CONFIRMED = false; PLAYED_ACCUM = 0; LAST_T = 0; }
 
   function startEndWatch() {
     if (END_WATCH) { clearInterval(END_WATCH); END_WATCH = null; }
@@ -260,36 +327,64 @@
 
       confirmMainPlayback(v);
 
-      if (!onListedPage() || !MAIN_CONFIRMED) return;
+      if (!onListedPageByIndex() || !MAIN_CONFIRMED) return;
 
       if (v.ended) { scheduleNext(); return; }
       const dur = v.duration;
       const t = v.currentTime;
-      if (Number.isFinite(dur) && dur > 0 && t >= dur - 0.3) {
-        scheduleNext();
-      }
+      if (Number.isFinite(dur) && dur > 0 && t >= dur - 0.3) scheduleNext();
     }, 1000);
+  }
+
+  // styles and dot
+  function ensureDotStyles() {
+    if (document.getElementById("wweDotStyle")) return;
+    const s = document.createElement("style");
+    s.id = "wweDotStyle";
+    s.textContent = `
+      #wweDot{
+        position:fixed !important;
+        right:12px !important;
+        bottom:12px !important;
+        width:18px !important;
+        height:18px !important;
+        min-width:18px !important;
+        min-height:18px !important;
+        max-width:18px !important;
+        max-height:18px !important;
+        border-radius:50% !important;
+        z-index:2147483647 !important;
+        cursor:pointer !important;
+        box-sizing:content-box !important;
+        transform:none !important;
+        contain:layout paint size style !important;
+        pointer-events:auto !important;
+        border:none !important;
+        outline:none !important;
+        display:none;
+      }
+      #wweDot.wwe-show{ display:block !important; }
+      #wweDot *{ all:unset !important; }
+    `;
+    document.documentElement.appendChild(s);
   }
 
   function ensureDot() {
     if (document.getElementById("wweDot")) return;
+    ensureDotStyles();
     const d = document.createElement("div");
-    Object.assign(d.style, {
-      position: "fixed", right: "12px", bottom: "12px",
-      width: "18px", height: "18px", zIndex: 999999,
-      background: color(currentType()), borderRadius: "50%", cursor: "pointer",
-      display: "none"
-    });
     d.id = "wweDot";
     d.onclick = openPanel;
+    d.style.background = colorForPage();
     document.body.appendChild(d);
   }
 
   function paintDot() {
     const d = document.getElementById("wweDot");
     if (!d) return;
-    d.style.background = color(currentType());
-    d.style.display = activeForThisPage() ? "block" : "none";
+    d.style.background = colorForPage();
+    if (activeForThisPage()) d.classList.add("wwe-show");
+    else d.classList.remove("wwe-show");
   }
 
   // import export
@@ -315,10 +410,7 @@
     a.download = filename;
     document.body.appendChild(a);
     a.click();
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-      a.remove();
-    }, 0);
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
   }
 
   function exportLists() {
@@ -328,9 +420,7 @@
   }
 
   function isValidPayload(obj) {
-    return obj
-      && obj.format === "wweAltLists"
-      && obj.lists
+    return obj && obj.format === "wweAltLists" && obj.lists
       && Array.isArray(obj.lists.raw)
       && Array.isArray(obj.lists.sd)
       && Array.isArray(obj.lists.ppv)
@@ -342,9 +432,9 @@
   }
 
   function applyImportedLists(obj) {
-    STATE.raw = obj.lists.raw.slice();
-    STATE.sd = obj.lists.sd.slice();
-    STATE.ppv = obj.lists.ppv.slice();
+    STATE.raw  = obj.lists.raw.slice();
+    STATE.sd   = obj.lists.sd.slice();
+    STATE.ppv  = obj.lists.ppv.slice();
     STATE.heat = obj.lists.heat.slice();
     build();
     detect();
@@ -503,11 +593,7 @@
       paintDot();
       startEndWatch();
     });
-    v.addEventListener("timeupdate", () => {
-      if (!USER_PAUSED) {
-        confirmMainPlayback(v);
-      }
-    });
+    v.addEventListener("timeupdate", () => { if (!USER_PAUSED) confirmMainPlayback(v); });
     v.addEventListener("pause", () => {
       if (v.ended) return;
       USER_PAUSED = true;
@@ -516,7 +602,7 @@
     });
     v.addEventListener("ended", () => {
       if (Date.now() < PAUSE_GUARD_UNTIL) return;
-      if (!onListedPage() || !MAIN_CONFIRMED) return;
+      if (!onListedPageByIndex() || !MAIN_CONFIRMED) return;
       scheduleNext();
     });
     startEndWatch();
@@ -524,6 +610,7 @@
 
   hook();
   setTimeout(autoPlay, 400);
+  ensureDotStyles();
   paintDot();
   startEndWatch();
 })();
