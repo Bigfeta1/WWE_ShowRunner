@@ -153,10 +153,11 @@ To completely remove the plugin:
 ---
 
 ## Notes
+- All data is stored locally (no external servers).
 
-- The script advances only when a main video ends (not background loops).  
-- Works on both Netflix and Peacock simultaneously.  
-- All data is stored locally (no external servers).  
+## Planned Improvements
+- Add hotkey option for panel activation (in cae you want to remove dot)
+- Updated episode list
 
 ---
 
