@@ -17,7 +17,6 @@ This userscript automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat*
 - Lightweight always-on design—no manual activation needed  
 
 ---
-
 ## Installation
 
 ### Option 1: Direct Installation (Recommended)
@@ -89,6 +88,27 @@ For example:
 - Each show category (RAW, SD, PPV, HEAT) keeps its own list.  
 - When importing the JSON file, ShowRunner will automatically **sort episodes by date** and **merge them into one master list**.  
 - You can manually edit the JSON file using any text editor to add, remove, or reorder episodes.
+
+---
+
+## Troubleshooting & Tips
+
+**If videos load but do not automatically start:**  
+Ensure that **autoplay is enabled** for both **Netflix** and **Peacock** in your account settings.  
+These services may block autoplay by default, preventing ShowRunner from automatically advancing between episodes.  
+
+### Enabling Autoplay
+
+**Netflix**  
+1. Go to [Netflix Playback Settings](https://www.netflix.com/YourAccount).  
+2. Under **Playback Settings**, check **“Autoplay next episode in a series on all devices.”**  
+3. Save your changes.  
+
+**Peacock**  
+1. Go to **Settings → Playback** in your account.  
+2. Enable **Autoplay Next Episode**.  
+
+Once autoplay is enabled, ShowRunner will play seamlessly across all entries.
 
 ---
 
