@@ -154,8 +154,7 @@ To completely remove the plugin:
 - All data is stored locally (no external servers).
 
 ## Planned Improvements
-- Add hotkey option for panel activation (in cae you want to remove dot)
-- Updated episode list
+- Update episode list
 
 ---
 
