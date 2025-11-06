@@ -24,8 +24,9 @@ This userscript automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat*
    - [Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
    - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
 2. Download WWE ShowRunner-1.0.user.js and drag to desktop
-3. Open TamperMonkey in your extensions and click **Create a new script**
-4. In the new screen, you have two options
+   - Alternatively, you can copy the code from github directly
+4. Open TamperMonkey in your extensions and click **Create a new script**
+5. In the new screen, you have two options
    a. Drag the WWE ShowRunner-1.0.0.user.js file into tampermonkey from desktop
       - You will get a prompt to install the script
       - Accept Install and then close out of Tampermonkey      
