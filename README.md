@@ -17,6 +17,7 @@ This userscript automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat*
 - Lightweight always-on design—no manual activation needed  
 
 ---
+
 ## Installation
 
 ### Option 1: Direct Installation (Recommended)
@@ -93,22 +94,37 @@ For example:
 
 ## Troubleshooting & Tips
 
-**If videos load but do not automatically start:**  
-Ensure that **autoplay is enabled** for both **Netflix** and **Peacock** in your account settings.  
-These services may block autoplay by default, preventing ShowRunner from automatically advancing between episodes.  
+### If videos load but do not automatically start
 
-### Enabling Autoplay
+You must enable **autoplay** in both your **browser preferences** and **account settings** for Netflix and Peacock.  
+If autoplay is blocked at either level, ShowRunner cannot automatically continue playback.
 
-**Netflix**  
+#### 1. Enable Autoplay in Browser Settings
+
+**Chrome:**  
+- Go to `chrome://settings/content/mediaAutoplay`  
+- Set **“Sites can autoplay media”** to **Allow**.  
+
+**Firefox:**  
+- Go to `about:preferences#privacy` → scroll to **Permissions → Autoplay**.  
+- Change **Default for all websites** to **Allow Audio and Video**.  
+
+**Edge:**  
+- Go to **Settings → Cookies and site permissions → Media autoplay**.  
+- Set it to **Allow**.  
+
+#### 2. Enable Autoplay in Streaming Accounts
+
+**Netflix:**  
 1. Go to [Netflix Playback Settings](https://www.netflix.com/YourAccount).  
 2. Under **Playback Settings**, check **“Autoplay next episode in a series on all devices.”**  
 3. Save your changes.  
 
-**Peacock**  
+**Peacock:**  
 1. Go to **Settings → Playback** in your account.  
 2. Enable **Autoplay Next Episode**.  
 
-Once autoplay is enabled, ShowRunner will play seamlessly across all entries.
+Once both browser and service-level autoplay are enabled, ShowRunner will run seamlessly.
 
 ---
 
