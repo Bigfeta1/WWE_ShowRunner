@@ -41,8 +41,8 @@ Automatically plays **RAW**, **SmackDown**, **PPV**, and **Heat** episodes in th
    - Copy the entire code, paste it into Tampermonkey, then click **File → Save**.
    - Exit Tampermonkey.
 
-Once installed, go to Netflix or Peacock. You should see a circle at the bottom right of your screen that you can click.
-If the circle is not visible, the installation was unsuccessful. After confirming the installation, load the show order:
+Once installed, hit "ctrl + alt + /". You should see The panel open up at the bottom right of the screen.
+If this does not appeare, the installation was unsuccessful. After confirming the installation, load the show order:
 
 1. Download `WWE_show_lists.json`.
 2. On Netflix or Peacock, click the circle at the bottom right.
@@ -55,13 +55,10 @@ To confirm that the episodes were loaded, you should see the lists populate in t
 
 ## Usage
 
-
-
-1. Navigate to any WWE episode on **Peacock** or **Netflix**.  
-2. Click the **colored circle** in the bottom-right corner of the page to open the control panel.  
+1. press "ctrl + alt + /" to open the control pane (alternatively, you can click the colored circle at bottom right during an episode)
 3. Add or import your lists of shows (RAW, SD, PPV, HEAT).  
 4. Click **Save** to update your list.  
-5. Use **Start** to begin from the first chronological episode, or **Resume** to continue from your last watched episode.  
+5. Use **Start** to begin from the first chronological episode (Wrestlemania 15 for now), or **Resume** to continue from your last watched episode.  
 6. The script will automatically advance to the next show once the current one finishes.
 
 ---
