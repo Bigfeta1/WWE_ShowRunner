@@ -66,12 +66,60 @@
 
   buildMaster();
 
+  // Dot indicator
+  function ensureDotStyles() {
+    if (document.getElementById("wweDotStyle")) return;
+    const s = document.createElement("style");
+    s.id = "wweDotStyle";
+    s.textContent = `
+      #wweDot{
+        position:fixed !important;
+        right:12px !important;
+        bottom:12px !important;
+        width:18px !important;
+        height:18px !important;
+        border-radius:50% !important;
+        z-index:2147483647 !important;
+        cursor:pointer !important;
+        display:block !important;
+      }
+    `;
+    document.documentElement.appendChild(s);
+  }
+
+  function ensureDot() {
+    if (document.getElementById("wweDot")) return;
+    ensureDotStyles();
+    const d = document.createElement("div");
+    d.id = "wweDot";
+    d.onclick = openPanel;
+    updateDotColor();
+    document.body.appendChild(d);
+  }
+
+  function updateDotColor() {
+    const d = document.getElementById("wweDot");
+    if (!d) return;
+    if (!STATE.autoplayActive || STATE.index >= master.length) {
+      d.style.background = "#777";
+      return;
+    }
+    const current = master[STATE.index];
+    const type = current ? current.type : "";
+    if (type === "RAW") d.style.background = "#e10600";
+    else if (type === "SD") d.style.background = "#0066ff";
+    else if (type === "PPV") d.style.background = "#e0b000";
+    else if (type === "HEAT") d.style.background = "#ff6a00";
+    else d.style.background = "#777";
+  }
+
   function navigate(index) {
     if (index < 0 || index >= master.length) return;
     const item = master[index];
     STATE.index = index;
     STATE.autoplayActive = true;
     saveState();
+    updateDotColor();
     console.log("[WWE] Navigating to index", index, ":", item.date, item.type, item.url);
     location.href = item.url;
   }
@@ -112,6 +160,7 @@
     if (watchInterval) clearInterval(watchInterval);
 
     console.log("[WWE] Starting video watch. Current index:", STATE.index);
+    updateDotColor();
 
     watchInterval = setInterval(() => {
       const v = getVideo();
@@ -199,6 +248,7 @@
       saveState();
       if (watchInterval) clearInterval(watchInterval);
       watchInterval = null;
+      updateDotColor();
       alert("Autoplay stopped");
     };
 
@@ -218,10 +268,23 @@
   if (isTargetSite()) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => {
+        ensureDot();
         setTimeout(startWatching, 1000);
       });
     } else {
-      setTimeout(startWatching, 1000);
+      setTimeout(() => {
+        ensureDot();
+        startWatching();
+      }, 1000);
+    }
+  }
+
+  // Ensure dot on other pages too (for panel access)
+  if (!isTargetSite()) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", ensureDot);
+    } else {
+      setTimeout(ensureDot, 500);
     }
   }
 
